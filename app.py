@@ -10,7 +10,7 @@ import edge_tts
 import numpy as np
 import requests
 import streamlit as st
-from moviepy import AudioFileClip, ImageClip, concatenate_videoclips
+from moviepy import AudioFileClip, VideoClip, concatenate_videoclips
 from PIL import Image, ImageDraw, ImageFont
 
 # ---------------------------------------------------------------------------
@@ -230,7 +230,7 @@ def plan_story_with_ai(prompt: str, category: str) -> dict:
                 "temperature": 0.7,
                 "max_tokens": 1200,
             },
-            timeout=35,
+            timeout=90,
         )
         resp.raise_for_status()
         content = resp.json()["choices"][0]["message"]["content"]
@@ -496,7 +496,7 @@ def build_drama_episode(prompt: str, category: str) -> dict:
             prog = min(1.0, max(0.0, t / max(0.1, dur)))
             return render_animated_frame_with_subtitle(img, sub, prog, mot)
 
-        vclip = ImageClip(make_frame, duration=duration).with_fps(fps)
+        vclip = VideoClip(make_frame, duration=duration).with_fps(fps)
         if audio_clip is not None:
             vclip = vclip.with_audio(audio_clip)
         clips.append(vclip)
